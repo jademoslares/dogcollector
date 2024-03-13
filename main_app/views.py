@@ -1,8 +1,8 @@
 from django.shortcuts import render
-
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Dog
 
-dogs = [
+dogsTempData = [
   {'name': 'Itsuki', 'breed': 'Husky', 'description': 'Elegant and proud', 'age': 3},
   {'name': 'Hisui', 'breed': 'Shiba Inu', 'description': 'Smart and Energetic', 'age': 2},
 ]
@@ -14,9 +14,21 @@ def about(request):
   return render(request, 'about.html')
 
 def dogs_index(request):
-  dogsDatabase = Dog.objects.all()
-  return render(request, 'dogs/index.html', {'dogs': dogsDatabase})
+  dogs = Dog.objects.all()
+  return render(request, 'dogs/index.html', {'dogs': dogs})
 
 def dogs_detail(request, dog_id):
   dog = Dog.objects.get(id=dog_id)
   return render(request, 'dogs/detail.html', {'dog': dog})
+
+class DogCreate(CreateView):
+  model = Dog
+  fields = '__all__'
+
+class DogUpdate(UpdateView):
+  model = Dog
+  fields = ['breed', 'description', 'age']
+
+class DogDelete(DeleteView):
+  model = Dog
+  success_url = '/dogs'
